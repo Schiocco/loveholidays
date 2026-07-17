@@ -1,10 +1,10 @@
- 
 from datetime import datetime
 from pathlib import Path
 
 
+# Calculates total price of luggage items.
+
 def get_total_price(items: list, luggage_options: dict):
-    """Calculates total price of luggage items."""
     try:
         total = 0
         currency = "GBP"
@@ -24,9 +24,10 @@ def get_total_price(items: list, luggage_options: dict):
         log_event(f"get_total_price exception: {e}")
         return "Unknown Price"
     
-    
+
+# Generates a human-readable transcript of the conversation
+
 def generate_transcript(messages):
-    """Generates a human-readable transcript of the conversation."""
     transcript_lines = ["Assistant: Hello! How can I help you today?"]
     
     for message in messages:
@@ -39,8 +40,9 @@ def generate_transcript(messages):
     return "\n".join(transcript_lines)
 
 
+# Appends a timestamped log line to app.log in the current folder
+
 def log_event(message: str, level: str = "CRITICAL"):
-    """Appends a timestamped log line to app.log in the current folder."""
     try:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         path = Path("app.log")

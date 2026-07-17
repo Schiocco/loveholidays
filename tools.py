@@ -4,6 +4,8 @@ from api import escalation
 from utils import log_event
 
 
+# Tools for handling human escalation.
+
 def human_escalation(booking_reference: str, reason: str, user_message: str):
     if not state.is_human_escalation_active:
         try:
@@ -14,14 +16,12 @@ def human_escalation(booking_reference: str, reason: str, user_message: str):
         state.is_human_escalation_active = True
 
 
-def trigger_human_escalation(messages, booking_reference):
+# Trigger a human_escalation_request tool call causing the agent to recognize missing data and explicitly query the user next.
+
+def trigger_human_escalation(messages, booking_reference: str):
     import uuid
     manual_call_id = f"call_{uuid.uuid4().hex[:20]}"
     
-    # Simulate AI generating a human_escalation_request tool call 
-    # WITHOUT the required confirmation_or_cancellation parameter.
-    # This intentionally mimics a partial tool call, causing the LLM
-    # to recognize missing data and explicitly query the user next.
     messages.append({
          "role": "assistant",
          "content": None,
@@ -37,7 +37,6 @@ def trigger_human_escalation(messages, booking_reference):
          }]
     })
     
-    # Supply an error payload to the tool_call instructing the AI to ask the user.
     messages.append({
         "role": "tool",
         "tool_call_id": manual_call_id,
@@ -45,11 +44,13 @@ def trigger_human_escalation(messages, booking_reference):
         "content": json.dumps({"error": "Missing required parameter 'confirmation_or_cancellation'. You MUST ask the user if they confirm or cancel the escalation."})
     })
     
+
+# Dynamically create the add_luggage tool based on the given luggage options.
     
 def create_dynamic_add_luggage_tool(luggage_options):
-    """Dynamically creates the add_luggage tool based on available options."""
     enum_values = set()
     passenger_ids = set()
+    
     for passenger, items in luggage_options.items():
         passenger_ids.add(passenger)
         for option_id in items.keys():
@@ -70,7 +71,7 @@ def create_dynamic_add_luggage_tool(luggage_options):
                         "type": "string",
                         "description": "The booking reference. Examples: 'LH123456', 'LH777888'."
                     },
-                    "baggages": {
+                    "luggages": {
                         "type": "array",
                         "description": "List of luggages to add",
                         "items": {
@@ -95,11 +96,13 @@ def create_dynamic_add_luggage_tool(luggage_options):
                         }
                     }
                 },
-                "required": ["booking_reference", "baggages"]
+                "required": ["booking_reference", "luggages"]
             }
         }
     }
 
+
+# Returns the list of static tools available to the agent.
 
 def get_tools():
     return [
