@@ -15,7 +15,7 @@ Copy this folder to your machine, then open a terminal in the project root.
 ## 2) Install dependencies
 
 ```bash
-pip install openai pydantic requests python-dotenv
+pip install openai pydantic requests python-dotenv pytest
 ```
 
 ## 3) Configure environment variables
@@ -33,6 +33,16 @@ python main.py
 ```
 
 The assistant will start in the terminal and prompt for user input.
+
+## 5) Run the automated tests
+
+Run the following commands from the project root:
+
+```bash
+python.exe -m pytest tests.py::test_booking_reference_lookup -v
+python.exe -m pytest tests.py::test_add_luggage -v
+python.exe -m pytest tests.py::test_escalation -v
+```
 
 ## Notes
 
